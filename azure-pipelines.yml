@@ -85,3 +85,9 @@ stages:
               azureSubscription: $(azureServiceConnectionId)
               appName: $(webAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+
+          - script: |
+              cd $(Pipeline.Workspace)/drop/$(Build.BuildId)
+              source antenv/bin/activate
+              streamlit run main.py
+            displayName: 'Run Streamlit App'
