@@ -18,21 +18,20 @@ def insert():
     customer_data = {}
     customer_columns = ['FName','LName','EmailAddress']
     for column in customer_columns:
-        customer_data[column] = st.text_input(f"Enter {column}", "")
+        if column == 'FName':
+            customer_data[column] = st.text_input("First Name")
+        elif column == 'LName':
+            customer_data[column] = st.text_input("Last Name")
+        elif column == 'EmailAddress':
+            customer_data[column] = st.text_input("Email Address")
 
     emails_data = {}
-    emails_columns = ['Content']
-
-    for column in emails_columns:
-        emails_data[column] = st.text_input(f"Enter {column}", "")
+    emails_data['Content'] = st.text_input("Issue Description")
 
     incident_data = {}
-    incident_columns = ['Priority']
+    incident_data['Priority'] = st.selectbox("Priority of the Issue", ['Low', 'Medium', 'High', 'Critical'])
 
     workson_data = {}
-
-    for column in incident_columns:
-        incident_data[column] = st.selectbox(f"Select {column}", ['Low', 'Medium', 'High', 'Critical'])
 
     if st.button("Add Data"):
 
@@ -112,7 +111,7 @@ def insert():
 
             st.success("Data added successfully!")
 
-            st.text("Incident Ticket generated with ID: " + str(workson_data['IncidentID']) + " and assigned to Support Representative: " + str(supportreps_fname) + " " + str(supportreps_lname) + " (" + str(supportreps_email) + ")")
+            st.success("Incident Ticket generated with ID: " + str(workson_data['IncidentID']) + " and assigned to Support Representative: " + str(supportreps_fname) + " " + str(supportreps_lname) + " (" + str(supportreps_email) + ")")
             
         else:
             st.error("Please fill in all required fields.")
