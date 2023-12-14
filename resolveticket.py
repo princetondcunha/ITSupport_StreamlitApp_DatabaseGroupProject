@@ -125,4 +125,31 @@ def resolveticket():
             update_knowledge_id(incident_id, knowledge_id, cursor)
             st.success("Ticket resolved successfully!")
        
+valid_credentials = {"username": "admin", "password": "admin"}
+is_logged_in = False
 
+def login_page():
+    global is_logged_in
+    title_container = st.empty()
+    input_container = st.empty()
+    password_container = st.empty()
+    button_container = st.empty()
+
+    if not is_logged_in:
+        title_container.title("Login")
+        username = input_container.text_input("Username")
+        password = password_container.text_input("Password", type="password")
+        login_button = button_container.button("Login")
+
+        if login_button:
+            if username == valid_credentials["username"] and password == valid_credentials["password"]:
+                is_logged_in = True
+                st.success("Login successful!")
+                input_container.empty()
+                password_container.empty()
+                button_container.empty()
+                title_container.empty()
+            else:
+                st.error("Invalid credentials. Please try again.")
+
+    return is_logged_in

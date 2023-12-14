@@ -4,6 +4,9 @@ import streamlit as st
 from readdata import read, readcustom
 from writedata import insert
 from resolveticket import resolveticket
+from resolveticket import login_page
+
+
 
 def main():
     '''Main'''
@@ -16,7 +19,8 @@ def main():
     elif choice == "Create an Issue":
         insert()
     elif choice == "Resolve Ticket":
-        resolveticket()
+        if login_page():
+            resolveticket()
     elif choice == "Insights":
         readcustom()
 
