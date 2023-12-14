@@ -47,7 +47,8 @@ def readcustom():
         custom_queries = [
             'Support Representative / Incident Tickets Insights',
             'Incidents per Month',
-            'Number of Incidents Based on Priority'
+            'Number of Incidents Based on Priority',
+            'Knowledge Base Insights'
             ]
         selected_queries  = st.selectbox("What insight do you want to find?", custom_queries)
 
@@ -165,6 +166,26 @@ def readcustom():
                 fig = px.bar(df, x='Month', y='IncidentCount', labels={'IncidentCount': 'Number of Incidents'}, title='Low Priority Incidents by Month')
                 fig.update_layout(xaxis_title='Month', yaxis_title='Number of Incidents')
                 st.plotly_chart(fig)
+
+        if selected_queries == 'Knowledge Base Insights':
+            number_of_rows = st.text_input("Number of Rows to Display")
+            action = st.selectbox("Select Action", ["Top", "Bottom"])
+
+            if st.button("Get Insights"):
+                try:
+                    number_of_rows = int(number_of_rows)
+                except ValueError:
+                    st.error("Number of rows should be a valid number")
+            
+                cursor.execute("SELECT kb.KB_ID,kb.IssueType,COUNT(inc.KnowledgeBaseID) AS IncidentCount FROM KnowledgeBase AS kb LEFT JOIN Incident AS inc ON kb.KB_ID = inc.KnowledgeBaseID GROUP BY kb.KB_ID, kb.IssueType ORDER BY kb.KB_ID")
+                table_data = cursor.fetchall()
+                column_names = [i[0] for i in cursor.description]
+                df = pd.DataFrame(table_data, columns=column_names)
+
+                if action == "Top":
+                    st.dataframe(df.sort_values(by='IncidentCount', ascending=False).head(number_of_rows),hide_index=True, use_container_width=True)
+                if action == "Bottom":
+                    st.dataframe(df.sort_values(by='IncidentCount', ascending=True).head(number_of_rows),hide_index=True, use_container_width=True)
 
     except mysql.connector.Error as err:
         st.error(f"Error: {err}")
