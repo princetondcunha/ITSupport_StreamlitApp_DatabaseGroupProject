@@ -14,7 +14,10 @@ def read():
         connection = mysqlconnect()
         cursor = connection.cursor()
         cursor.execute("SHOW TABLES")
-        table_names = [table[0].decode('utf-8') for table in cursor.fetchall()]
+        extract_tables = cursor.fetchall()
+        table_names = []
+        for tables in extract_tables:
+            table_names.append(tables[0])
 
         selected_table = st.selectbox("Select a table", table_names)
 
